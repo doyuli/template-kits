@@ -5,10 +5,9 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
-      "@doyuli/*": ["packages/*/src"]
+      "@kits/*": ["packages/*/src"]
     },
     "resolveJsonModule": true,
     "strict": false
-  },
-  "include": ["packages/core/src/**/*"]
+  }
 }

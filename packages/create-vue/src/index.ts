@@ -14,7 +14,7 @@ import {
   unwrapPrompt,
 } from '@kits/core'
 import ejs from 'ejs'
-import { dim, magenta, red } from 'picocolors'
+import pico from 'picocolors'
 import {
   DEFAULT_BANNER,
   FEATURE_OPTIONS,
@@ -27,16 +27,15 @@ interface PromptResult {
   features?: (typeof FEATURE_OPTIONS)[number]['value'][]
 }
 
-(async function () {
-  const cwd = process.cwd()
-
+async function promptUser() {
   const { positionals } = parseArgs({
     strict: true,
     allowPositionals: true,
   })
 
   let targetDir = positionals[0]
-  const defaultProjectName = targetDir || 'vue-template'
+
+  const defaultProjectName = targetDir || 'Template-Kits'
 
   const result: PromptResult = {
     projectName: defaultProjectName,
@@ -44,8 +43,6 @@ interface PromptResult {
     shouldOverwrite: false,
     features: [],
   }
-
-  intro(magenta(DEFAULT_BANNER))
 
   if (!targetDir) {
     const _result = await unwrapPrompt(
@@ -72,26 +69,28 @@ interface PromptResult {
     )
 
     if (!result.shouldOverwrite) {
-      cancel(`${red('✖')} 操作取消`)
+      cancel(`${pico.red('✖')} 操作取消`)
       process.exit(0)
     }
   }
 
   result.features = await unwrapPrompt(
     multiselect({
-      message: `请选择要包含的功能： ${dim('(↑/↓ 切换，空格选择，a 全选，回车确认)')}`,
+      message: `请选择要包含的功能： ${pico.dim('(↑/↓ 切换，空格选择，a 全选，回车确认)')}`,
       // @ts-expect-error @clack/prompt's type doesn't support readonly array yet
       options: FEATURE_OPTIONS,
       required: false,
     }),
   )
 
-  const { features } = result
+  return {
+    result,
+    targetDir,
+  }
+}
 
+function setupProjectDir(cwd: string, result: PromptResult, targetDir: string) {
   const root = path.join(cwd, targetDir)
-  const needsAutoRouter = features.includes('unplugin-vue-router')
-  const needsGitHooks = features.includes('simple-git-hooks')
-  const needsVitest = features.includes('vitest')
 
   if (fs.existsSync(root) && result.shouldOverwrite) {
     emptyDir(root)
@@ -103,12 +102,22 @@ interface PromptResult {
   console.log(`\n正在初始化项目 ${root}...`)
 
   const pkg = { name: result.packageName, version: '0.0.0' }
-  fs.writeFileSync(path.resolve(root, 'package.json'), JSON.stringify(pkg, null, 2))
+
+  renderFile(root, 'tsconfig.json', JSON.stringify(pkg, null, 2))
+
+  return root
+}
+
+function renderTemplates(root: string, result: PromptResult) {
+  const { features = [] } = result
+
+  const needsAutoRouter = features.includes('unplugin-vue-router')
+  const needsGitHooks = features.includes('simple-git-hooks')
+  const needsVitest = features.includes('vitest')
 
   const templateRoot = fileURLToPath(new URL('../template', import.meta.url))
   const callbacks: any[] = []
-
-  const render = function render(templateName: string) {
+  const render = (templateName: string) => {
     const templateDir = path.resolve(templateRoot, templateName)
     renderTemplate(templateDir, root, callbacks)
   }
@@ -117,21 +126,14 @@ interface PromptResult {
   render('eslint')
   render('tsconfig')
 
-  if (needsAutoRouter) {
-    render('router/unplugin')
-  }
-  else {
-    render('router/default')
-  }
+  render(needsAutoRouter ? 'router/unplugin' : 'router/default')
 
   if (needsGitHooks) {
     render('git-hooks')
   }
 
   const rootTsConfig = {
-    // It doesn't target any specific files because they are all configured in the referenced ones.
     files: [],
-    // All templates contain at least a `.node` and a `.app` tsconfig.
     references: [
       {
         path: './tsconfig.node.json',
@@ -144,24 +146,13 @@ interface PromptResult {
 
   if (needsVitest) {
     render('vitest')
-    rootTsConfig.references.push({
-      path: './tsconfig.vitest.json',
-    })
+    rootTsConfig.references.push({ path: './tsconfig.vitest.json' })
   }
 
-  renderFile(
-    root,
-    'tsconfig.json',
-    `${JSON.stringify(rootTsConfig, null, 2)}\n`,
-  )
+  renderFile(root, 'tsconfig.json', `${JSON.stringify(rootTsConfig, null, 2)}\n`)
+  renderFile(root, '.env', `VITE_APP_TITLE = ${result.packageName}\n`)
 
-  renderFile(
-    root,
-    '.env',
-    `VITE_APP_TITLE = ${result.packageName}\n`,
-  )
-
-  // EJS template rendering
+  //  EJS template rendering
   preOrderDirectoryTraverse(
     root,
     () => {},
@@ -173,12 +164,23 @@ interface PromptResult {
           needsAutoRouter,
           needsGitHooks,
         })
-
         fs.writeFileSync(dest, content)
         fs.unlinkSync(filepath)
       }
     },
   )
+}
+
+(async function () {
+  const cwd = process.cwd()
+
+  intro(pico.magenta(DEFAULT_BANNER))
+
+  const { result, targetDir } = await promptUser()
+
+  const root = setupProjectDir(cwd, result, targetDir)
+
+  renderTemplates(root, result)
 
   outro(getOutroMessage(root, cwd))
 })()

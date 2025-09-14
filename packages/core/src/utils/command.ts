@@ -1,6 +1,6 @@
 import { relative } from 'node:path'
 import process from 'node:process'
-import { bold, green } from 'picocolors'
+import pico from 'picocolors'
 
 export function getPackageManager() {
   const userAgent = process.env.npm_config_user_agent ?? ''
@@ -36,11 +36,11 @@ export function getOutroMessage(root: string, cwd: string) {
   let message = `项目初始化完成，可执行以下命令：\n\n`
   if (root !== cwd) {
     const cdProjectName = relative(cwd, root)
-    message += `   ${bold(green(`cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`))}\n`
+    message += `   ${pico.bold(pico.green(`cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`))}\n`
   }
-  message += `   ${bold(green(getPackageCommand(packageManager, 'install')))}\n`
-  message += `   ${bold(green(getPackageCommand(packageManager, 'lint:fix')))}\n`
-  message += `   ${bold(green(getPackageCommand(packageManager, 'dev')))}\n`
+  message += `   ${pico.bold(pico.green(getPackageCommand(packageManager, 'install')))}\n`
+  message += `   ${pico.bold(pico.green(getPackageCommand(packageManager, 'lint:fix')))}\n`
+  message += `   ${pico.bold(pico.green(getPackageCommand(packageManager, 'dev')))}\n`
 
   return message
 }

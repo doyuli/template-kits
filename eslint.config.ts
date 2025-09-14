@@ -11,12 +11,4 @@ export default antfu(
       'no-console': 'off',
     },
   },
-  // {
-  //   files: [
-  //     '**/template',
-  //   ],
-  //   rules: {
-  //     all: 'off',
-  //   },
-  // },
 )
