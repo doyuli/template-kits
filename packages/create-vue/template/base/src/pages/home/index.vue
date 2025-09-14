@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SiteTitle from '@/components/SiteTitle.vue'
+
 definePage({
   path: '/',
   meta: {
@@ -10,9 +12,7 @@ definePage({
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-6">
     <div class="text-center space-y-4">
-      <h1 class="text-5xl font-extrabold text-gray-900">
-        Vue Template
-      </h1>
+      <SiteTitle title="Vue Template" />
       <p class="text-gray-600 max-w-lg mx-auto">
         自用 Vue 3 开发模板，集成 Vite、Pinia、Vue Router、UnoCSS 等常用工具。
       </p>
@@ -24,7 +24,7 @@ definePage({
           About Page
         </router-link>
         <a
-          href="https://github.com/"
+          href="https://github.com/doyuli/template-kits"
           target="_blank"
           class="px-6 py-3 rounded-lg bg-gray-100 text-gray-800 font-medium shadow hover:bg-gray-200 transition"
         >
