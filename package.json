@@ -1,0 +1,41 @@
+{
+  "name": "template-kits",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "cli": "node dist/index.js",
+    "dev": "pnpm -r --parallel run build --watch",
+    "build": "pnpm -r run build",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "postinstall": "simple-git-hooks"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:",
+    "@clack/prompts": "catalog:",
+    "@tsconfig/node22": "catalog:",
+    "@types/ejs": "catalog:",
+    "@types/node": "catalog:",
+    "ejs": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-format": "catalog:",
+    "eslint-plugin-vue": "catalog:",
+    "lint-staged": "catalog:",
+    "picocolors": "catalog:",
+    "prettier": "catalog:",
+    "simple-git-hooks": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged",
+    "commit-msg": "node scripts/verify-commit.js"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}

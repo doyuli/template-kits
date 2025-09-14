@@ -1,0 +1,14 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@doyuli/*": ["packages/*/src"]
+    },
+    "resolveJsonModule": true,
+    "strict": false
+  },
+  "include": ["packages/core/src/**/*"]
+}
