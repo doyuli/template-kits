@@ -1,23 +1,40 @@
 {
-  "name": "@kits/create-vue",
+  "name": "@doyuli/create-vue",
   "type": "module",
-  "version": "0.0.0",
-  "description": "@kits/create-vue",
+  "version": "0.0.1-beta.3",
+  "description": "@doyuli/create-vue",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doyuli/template-kits.git",
+    "directory": "packages/create-vue"
+  },
+  "keywords": ["templates", "create-vue"],
   "sideEffects": false,
   "main": "dist/index.js",
-  "files": ["dist"],
+  "bin": {
+    "create-vue": "bin/index.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "template",
+    "template/base/.vscode/settings.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "cli": "node dist/index.js",
     "dev": "tsdown --watch",
     "build": "tsdown",
     "prepack": "pnpm run build"
   },
   "dependencies": {
     "@clack/prompts": "catalog:",
-    "@kits/core": "workspace:^",
+    "@doyuli/kits-core": "workspace:^",
     "picocolors": "catalog:"
   }
 }

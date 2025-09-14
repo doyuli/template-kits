@@ -102,23 +102,23 @@ importers:
         specifier: 'catalog:'
         version: 5.8.3
 
-  packages/core:
-    dependencies:
-      '@clack/prompts':
-        specifier: 'catalog:'
-        version: 0.11.0
-      picocolors:
-        specifier: 'catalog:'
-        version: 1.1.1
-
   packages/create-vue:
     dependencies:
       '@clack/prompts':
         specifier: 'catalog:'
         version: 0.11.0
-      '@kits/core':
+      '@doyuli/kits-core':
         specifier: workspace:^
-        version: link:../core
+        version: link:../kits-core
+      picocolors:
+        specifier: 'catalog:'
+        version: 1.1.1
+
+  packages/kits-core:
+    dependencies:
+      '@clack/prompts':
+        specifier: 'catalog:'
+        version: 0.11.0
       picocolors:
         specifier: 'catalog:'
         version: 1.1.1
@@ -390,28 +390,24 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-arm64-musl@1.0.0-beta.37':
     resolution: {integrity: sha512-z8Aa5Kar5mhh0RVZEL+zKJwNz1cgcDISmwUMcTk0w986T8JZJOJCfJ/u9e8pqUTIJjxdM8SZq9/24nMgMlx5ng==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@rolldown/binding-linux-x64-gnu@1.0.0-beta.37':
     resolution: {integrity: sha512-e+fNseKhfE/socjOw6VrQcXrbNKfi2V/KZ+ssuLnmeaYNGuJWqPhvML56oYhGb3IgROEEc61lzr3Riy5BIqoMA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-x64-musl@1.0.0-beta.37':
     resolution: {integrity: sha512-dPZfB396PMIasd19X0ikpdCvjK/7SaJFO8y5/TxnozJEy70vOf4GESe/oKcsJPav/MSTWBYsHjJSO6vX0oAW8g==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@rolldown/binding-openharmony-arm64@1.0.0-beta.37':
     resolution: {integrity: sha512-rFjLXoHpRqxJqkSBXHuyt6bhyiIFnvLD9X2iPmCYlfpEkdTbrY1AXg4ZbF8UMO5LM7DAAZm/7vPYPO1TKTA7Sg==}

@@ -12,7 +12,7 @@ import {
   renderFile,
   renderTemplate,
   unwrapPrompt,
-} from '@kits/core'
+} from '@doyuli/kits-core'
 import ejs from 'ejs'
 import pico from 'picocolors'
 import {
