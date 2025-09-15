@@ -22,7 +22,7 @@ catalogs:
       specifier: ^22.16.5
       version: 22.18.3
     ejs:
-      specifier: ^3.1.10
+      specifier: 3.1.10
       version: 3.1.10
     eslint:
       specifier: ^9.31.0
@@ -110,6 +110,9 @@ importers:
       '@doyuli/kits-core':
         specifier: workspace:^
         version: link:../kits-core
+      ejs:
+        specifier: 'catalog:'
+        version: 3.1.10
       picocolors:
         specifier: 'catalog:'
         version: 1.1.1

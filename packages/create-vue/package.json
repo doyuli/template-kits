@@ -9,7 +9,10 @@
     "url": "git+https://github.com/doyuli/template-kits.git",
     "directory": "packages/create-vue"
   },
-  "keywords": ["templates", "create-vue"],
+  "keywords": [
+    "templates",
+    "create-vue"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
   "bin": {
@@ -35,6 +38,7 @@
   "dependencies": {
     "@clack/prompts": "catalog:",
     "@doyuli/kits-core": "workspace:^",
+    "ejs": "catalog:",
     "picocolors": "catalog:"
   }
 }
