@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel run build --watch",
     "build": "pnpm -r run build",
-    "publish:ci": "pnpm publish -r --access public --no-git-checks",
+    "publish:ci": "node scripts/publish.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "postinstall": "simple-git-hooks"
@@ -27,6 +27,7 @@
     "lint-staged": "catalog:",
     "picocolors": "catalog:",
     "prettier": "catalog:",
+    "semver": "catalog:",
     "simple-git-hooks": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"

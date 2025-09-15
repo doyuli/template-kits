@@ -14,6 +14,7 @@ catalog:
   lint-staged: ^16.1.6
   picocolors: ^1.1.1
   prettier: 3.6.2
+  semver: ^7.7.2
   simple-git-hooks: ^2.13.1
   tsdown: ^0.15.1
   typescript: ~5.8.0
