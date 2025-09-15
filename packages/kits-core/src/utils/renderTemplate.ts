@@ -1,6 +1,5 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { pathToFileURL } from 'node:url'
 
 import { deepMerge, sortDependencies } from './util'
 
@@ -15,7 +14,7 @@ import { deepMerge, sortDependencies } from './util'
  * @param {string} src source filename to copy
  * @param {string} dest destination filename of the copy operation
  */
-export function renderTemplate(src: string, dest: string, callbacks: any[]) {
+export function renderTemplate(src: string, dest: string) {
   const stats = fs.statSync(src)
 
   if (stats.isDirectory()) {
@@ -27,7 +26,7 @@ export function renderTemplate(src: string, dest: string, callbacks: any[]) {
     // if it's a directory, render its subdirectories and files recursively
     fs.mkdirSync(dest, { recursive: true })
     for (const file of fs.readdirSync(src)) {
-      renderTemplate(path.resolve(src, file), path.resolve(dest, file), callbacks)
+      renderTemplate(path.resolve(src, file), path.resolve(dest, file))
     }
     return
   }
@@ -72,24 +71,6 @@ export function renderTemplate(src: string, dest: string, callbacks: any[]) {
     const newGitignore = fs.readFileSync(src, 'utf8')
     fs.writeFileSync(dest, `${existing}\n${newGitignore}`)
     return
-  }
-
-  // data file for EJS templates
-  if (filename.endsWith('.data.mjs')) {
-    // use dest path as key for the data store
-    dest = dest.replace(/\.data\.mjs$/, '')
-
-    // Add a callback to the array for late usage when template files are being processed
-    callbacks.push(async (dataStore: string) => {
-      const getData = (await import(pathToFileURL(src).toString())).default
-
-      // Though current `getData` are all sync, we still retain the possibility of async
-      dataStore[dest] = await getData({
-        oldData: dataStore[dest] || {},
-      })
-    })
-
-    return // skip copying the data file
   }
 
   fs.copyFileSync(src, dest)

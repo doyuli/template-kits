@@ -64,10 +64,9 @@ function renderTemplates(root: string, result: PromptResult) {
   const needsVitest = features.includes('vitest')
 
   const templateRoot = fileURLToPath(new URL('../template', import.meta.url))
-  const callbacks: any[] = []
   const render = (templateName: string) => {
     const templateDir = path.resolve(templateRoot, templateName)
-    renderTemplate(templateDir, root, callbacks)
+    renderTemplate(templateDir, root)
   }
 
   render('base')
