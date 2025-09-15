@@ -1,13 +1,17 @@
 {
   "name": "@doyuli/kits-core",
   "type": "module",
-  "version": "0.0.1-beta.4",
+  "version": "0.1.0",
   "description": "@doyuli/kits-core",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/doyuli/template-kits.git",
     "directory": "packages/kits-core"
   },
+  "keywords": [
+    "templates",
+    "kits"
+  ],
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
