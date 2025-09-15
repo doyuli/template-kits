@@ -35,6 +35,9 @@ function logError(msg) {
     message: `即将发布:  ${pico.bold(nextVersion)}, 是否继续？`,
   })
 
+  if (!shouldUpdate)
+    return
+
   if (isCancel(shouldUpdate)) {
     cancel(`${pico.red('✖')} 操作取消`)
     process.exit(0)
@@ -51,6 +54,9 @@ function logError(msg) {
   const shouldPublish = await confirm({
     message: `是否执行发布`,
   })
+
+  if (!shouldPublish)
+    return
 
   if (isCancel(shouldPublish)) {
     cancel(`${pico.red('✖')} 操作取消`)
