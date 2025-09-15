@@ -1,17 +1,20 @@
+import type {
+  PromptResult,
+} from '@doyuli/kits-core'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
-import { cancel, confirm, intro, multiselect, outro, text } from '@clack/prompts'
+import { intro, outro } from '@clack/prompts'
 import {
-  canSkipEmptying,
-  emptyDir,
-  getOutroMessage,
+  getCommand,
+  getPackageManager,
   preOrderDirectoryTraverse,
   renderFile,
   renderTemplate,
-  unwrapPrompt,
+  setupProject,
+  setupPrompts,
 } from '@doyuli/kits-core'
 import ejs from 'ejs'
 import pico from 'picocolors'
@@ -20,92 +23,37 @@ import {
   FEATURE_OPTIONS,
 } from './constants'
 
-interface PromptResult {
-  projectName?: string
-  packageName?: string
-  shouldOverwrite?: boolean
-  features?: (typeof FEATURE_OPTIONS)[number]['value'][]
-}
-
-async function promptUser() {
+(async function () {
+  const cwd = process.cwd()
   const { positionals } = parseArgs({
     strict: true,
     allowPositionals: true,
   })
 
-  let targetDir = positionals[0]
+  intro(pico.magenta(DEFAULT_BANNER))
 
-  const defaultProjectName = targetDir || 'Template-Kits'
+  const { result, targetDir } = await setupPrompts(positionals[0], FEATURE_OPTIONS)
 
-  const result: PromptResult = {
-    projectName: defaultProjectName,
-    packageName: defaultProjectName,
-    shouldOverwrite: false,
-    features: [],
+  const root = await setupProject(cwd, result, targetDir)
+
+  renderTemplates(root, result)
+
+  outro(getOutroMessage(root, cwd))
+})()
+
+function getOutroMessage(root: string, cwd: string) {
+  const manager = getPackageManager()
+
+  let message = `项目初始化完成，可执行以下命令：\n\n`
+  if (root !== cwd) {
+    const cdProjectName = path.relative(cwd, root)
+    message += `   ${pico.bold(pico.green(`cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`))}\n`
   }
+  message += `   ${pico.bold(pico.green(getCommand(manager, 'install')))}\n`
+  message += `   ${pico.bold(pico.green(getCommand(manager, 'lint:fix')))}\n`
+  message += `   ${pico.bold(pico.green(getCommand(manager, 'dev')))}\n`
 
-  if (!targetDir) {
-    const _result = await unwrapPrompt(
-      text({
-        message: '请输入项目名称：',
-        placeholder: defaultProjectName,
-        defaultValue: '',
-        validate: value => value.trim().length === 0 ? '不能为空' : '',
-      }),
-    )
-    targetDir = result.projectName = result.packageName = _result.trim()
-  }
-
-  if (!canSkipEmptying(targetDir)) {
-    result.shouldOverwrite = await unwrapPrompt(
-      confirm({
-        message: `${
-          targetDir === '.'
-            ? '当前目录'
-            : `目标文件夹 "${targetDir}"`
-        } 非空，是否覆盖？`,
-        initialValue: false,
-      }),
-    )
-
-    if (!result.shouldOverwrite) {
-      cancel(`${pico.red('✖')} 操作取消`)
-      process.exit(0)
-    }
-  }
-
-  result.features = await unwrapPrompt(
-    multiselect({
-      message: `请选择要包含的功能： ${pico.dim('(↑/↓ 切换，空格选择，a 全选，回车确认)')}`,
-      // @ts-expect-error @clack/prompt's type doesn't support readonly array yet
-      options: FEATURE_OPTIONS,
-      required: false,
-    }),
-  )
-
-  return {
-    result,
-    targetDir,
-  }
-}
-
-function setupProjectDir(cwd: string, result: PromptResult, targetDir: string) {
-  const root = path.join(cwd, targetDir)
-
-  if (fs.existsSync(root) && result.shouldOverwrite) {
-    emptyDir(root)
-  }
-  else if (!fs.existsSync(root)) {
-    fs.mkdirSync(root)
-  }
-
-  console.log(`\n正在初始化项目 ${root}...`)
-
-  const pkg = { name: result.packageName, version: '0.0.0' }
-
-  renderFile(root, 'tsconfig.json', JSON.stringify(pkg, null, 2))
-
-  return root
+  return message
 }
 
 function renderTemplates(root: string, result: PromptResult) {
@@ -160,27 +108,10 @@ function renderTemplates(root: string, result: PromptResult) {
       if (filepath.endsWith('.ejs')) {
         const template = fs.readFileSync(filepath, 'utf-8')
         const dest = filepath.replace(/\.ejs$/, '')
-        const content = ejs.render(template, {
-          needsAutoRouter,
-          needsGitHooks,
-        })
+        const content = ejs.render(template, result)
         fs.writeFileSync(dest, content)
         fs.unlinkSync(filepath)
       }
     },
   )
 }
-
-(async function () {
-  const cwd = process.cwd()
-
-  intro(pico.magenta(DEFAULT_BANNER))
-
-  const { result, targetDir } = await promptUser()
-
-  const root = setupProjectDir(cwd, result, targetDir)
-
-  renderTemplates(root, result)
-
-  outro(getOutroMessage(root, cwd))
-})()

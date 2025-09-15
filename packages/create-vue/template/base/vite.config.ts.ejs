@@ -3,7 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
-<%_ if (needsAutoRouter) { -%>
+<%_ if (features.includes('unplugin-vue-router')) { -%>
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 <%_ } -%>
@@ -13,7 +13,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    <%_ if (needsAutoRouter) { -%>
+    <%_ if (features.includes('unplugin-vue-router')) { -%>
     VueRouter({
       dts: 'types/typed-router.d.ts',
     }),
@@ -23,7 +23,7 @@ export default defineConfig({
     AutoImport({
       imports: [
         'vue',
-        <%_ if (needsAutoRouter) { -%>
+        <%_ if (features.includes('unplugin-vue-router')) { -%>
         VueRouterAutoImports,
         <%_ } else { -%>
         'vue-router',

@@ -2,10 +2,11 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import deepMerge from './deepMerge'
-import sortDependencies from './sortDependencies'
+import { deepMerge, sortDependencies } from './util'
 
 /**
+ * @see https://github.com/vuejs/create-vue/blob/main/utils/renderTemplate.ts
+ *
  * Renders a template folder/file to the file system,
  * by recursively copying all files under the `src` directory,
  * with the following exception:
@@ -92,4 +93,16 @@ export function renderTemplate(src: string, dest: string, callbacks: any[]) {
   }
 
   fs.copyFileSync(src, dest)
+}
+
+export function renderFile(
+  root: string,
+  fileName: string,
+  content: string,
+) {
+  fs.writeFileSync(
+    path.resolve(root, fileName),
+    content,
+    'utf-8',
+  )
 }

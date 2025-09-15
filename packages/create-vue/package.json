@@ -19,7 +19,7 @@
     "bin",
     "dist",
     "template",
-    "template/base/.vscode/settings.json"
+    "template/**/settings.json"
   ],
   "publishConfig": {
     "access": "public"

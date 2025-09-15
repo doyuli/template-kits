@@ -1,6 +1,9 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
+/**
+ * @see https://github.com/vuejs/create-vue/blob/main/utils/directoryTraverse.ts
+ */
 export function preOrderDirectoryTraverse(
   dir: string,
   dirCallback: (dir: string) => void,
