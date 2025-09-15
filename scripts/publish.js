@@ -36,7 +36,7 @@ function logError(msg) {
   })
 
   if (!shouldUpdate)
-    return
+    process.exit(0)
 
   if (isCancel(shouldUpdate)) {
     cancel(`${pico.red('✖')} 操作取消`)
@@ -56,7 +56,7 @@ function logError(msg) {
   })
 
   if (!shouldPublish)
-    return
+    process.exit(0)
 
   if (isCancel(shouldPublish)) {
     cancel(`${pico.red('✖')} 操作取消`)
