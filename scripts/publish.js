@@ -3,11 +3,22 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { cancel, confirm, isCancel } from '@clack/prompts'
+import { cancel, confirm, isCancel, select } from '@clack/prompts'
 import pico from 'picocolors'
 import semver from 'semver'
 
-const validTypes = new Set(['major', 'minor', 'patch', 'beta'])
+const betaTypes = ['premajor', 'preminor', 'prepatch']
+
+const validTypes = new Set(['major', 'minor', 'patch', ...betaTypes])
+
+const publishOptions = [
+  { label: '修复版本 (patch)', value: 'patch' },
+  { label: '小版本 (minor)', value: 'minor' },
+  { label: '大版本 (major)', value: 'major' },
+  { label: '修复版本 (beta)', value: 'prepatch' },
+  { label: '小版本 (beta)', value: 'preminor' },
+  { label: '大版本 (beta)', value: 'premajor' },
+]
 
 function logError(msg) {
   console.error(pico.red(msg))
@@ -21,12 +32,22 @@ function logError(msg) {
     strict: true,
     allowPositionals: true,
   })
+  let publishType = positionals[0]
 
-  const publishType = positionals[0] || 'patch'
+  if (!publishType) {
+    publishType = await select({
+      message: '请选择发布类型：',
+      options: publishOptions,
+    })
 
-  if (!validTypes.has(publishType)) {
-    logError(`Invalid release type: ${publishType}. Expected one of: ${[...validTypes].join(', ')}`)
+    if (isCancel(publishType)) {
+      cancel(`${pico.red('✖')} 操作取消`)
+      process.exit(0)
+    }
   }
+
+  if (!validTypes.has(publishType))
+    logError(`Invalid release type: ${publishType}. Expected one of: ${[...validTypes].join(', ')}`)
 
   const rootPackage = getCurrenPackage(cwd)
   const nextVersion = getNextVersion(rootPackage.version, publishType)
@@ -76,12 +97,12 @@ function getNextVersion(current, type = 'patch') {
   if (!semver.valid(current)) {
     logError(`Invalid semver version: ${current}`)
   }
-  if (type === 'beta') {
+  if (betaTypes.includes(type)) {
     if (semver.prerelease(current)) {
       return semver.inc(current, 'prerelease')
     }
     else {
-      return semver.inc(current, 'preminor', 'beta')
+      return semver.inc(current, type, 'beta')
     }
   }
 
