@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import SiteTitle from '@/components/SiteTitle.vue'
 
+<%_ if (features.includes('unplugin-vue-router')) { -%>
 definePage({
   path: '/',
   meta: {
     title: '首页',
   },
 })
+<%_ } -%>
 </script>
 
 <template>
