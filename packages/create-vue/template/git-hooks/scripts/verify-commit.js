@@ -9,7 +9,7 @@ const msgPath = path.resolve('.git/COMMIT_EDITMSG')
 const msg = readFileSync(msgPath, 'utf-8').trim()
 
 // eslint-disable-next-line regexp/no-unused-capturing-group
-const commitRE = /^(revert: )?(feat|fix|docs|dx|style|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?: .{1,50}/
+const COMMIT_RE = /^(revert: )?(feat|fix|docs|dx|style|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?: .{1,50}/
 
 if (!COMMIT_RE.test(msg)) {
   console.log()
