@@ -20,9 +20,6 @@ interface ConfirmOptions {
   initialValue?: boolean
 }
 
-/**
- * 创建一个 select 单选步骤
- */
 export function setupSelect<Key extends string, T extends string>(key: Key, options: SelectOptions<T>): PromptStep<Record<Key, T>> {
   return async () => {
     const value = await unwrapPrompt(
@@ -35,9 +32,6 @@ export function setupSelect<Key extends string, T extends string>(key: Key, opti
   }
 }
 
-/**
- * 创建一个 multiselect 多选步骤
- */
 export function setupFeatures<Key extends string, T extends string>(key: Key, options: FeaturesOptions<T>): PromptStep<Record<Key, T[]>> {
   return async () => {
     const selected = await unwrapPrompt(
@@ -51,9 +45,6 @@ export function setupFeatures<Key extends string, T extends string>(key: Key, op
   }
 }
 
-/**
- * 创建一个 confirm 确认步骤
- */
 export function setupConfirm<Key extends string>(key: Key, options: ConfirmOptions): PromptStep<Record<Key, boolean>> {
   return async () => {
     const value = await unwrapPrompt(
