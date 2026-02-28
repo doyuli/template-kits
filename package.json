@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel run build --watch",
     "build": "pnpm -r run build",
-    "publish:ci": "node scripts/publish.js",
+    "release": "bumpp",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "postinstall": "simple-git-hooks"
@@ -20,6 +20,7 @@
     "@tsconfig/node22": "catalog:",
     "@types/ejs": "catalog:",
     "@types/node": "catalog:",
+    "bumpp": "catalog:",
     "ejs": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
@@ -27,7 +28,6 @@
     "lint-staged": "catalog:",
     "picocolors": "catalog:",
     "prettier": "catalog:",
-    "semver": "catalog:",
     "simple-git-hooks": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"
