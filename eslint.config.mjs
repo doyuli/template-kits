@@ -6,6 +6,7 @@ export default antfu(
     pnpm: true,
     ignores: [
       '**/template',
+      'examples/**',
     ],
     rules: {
       'no-console': 'off',
