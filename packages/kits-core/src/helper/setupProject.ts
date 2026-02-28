@@ -25,7 +25,3 @@ export async function setupProject(
 
   return root
 }
-
-// export async function initial() {
-
-// }

@@ -1,28 +1,36 @@
-import type { Option } from '@clack/prompts'
 import process from 'node:process'
-import { cancel, confirm, multiselect, text } from '@clack/prompts'
+import { cancel, confirm, text } from '@clack/prompts'
 import pico from 'picocolors'
 import { canSkipEmptying, unwrapPrompt } from '../utils'
 
-export interface PromptResult<T = string> {
+export type PromptStep<T extends Record<string, any> = Record<string, any>>
+  = (result: PromptResult) => Promise<T>
+
+export interface PromptResult {
   projectName?: string
   packageName?: string
   shouldOverwrite?: boolean
-  features?: T[]
 }
 
-export async function setupPrompts<T = string>(
+type UnionToIntersection<U>
+  = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never
+
+type InferSteps<T extends PromptStep<any>[]>
+  = UnionToIntersection<T[number] extends PromptStep<infer R> ? R : never>
+
+export async function setupPrompts<
+  const Steps extends PromptStep<any>[],
+>(
   targetDir: string,
-  featureOptions: ReadonlyArray<Option<T>>,
+  steps: [...Steps],
 ) {
   const defaultProjectName = targetDir || 'Template-Kits'
 
-  const result: PromptResult<T> = {
+  const result = {
     projectName: defaultProjectName,
     packageName: defaultProjectName,
-    shouldOverwrite: false,
-    features: [],
-  }
+    shouldOverwrite: false as boolean,
+  } as PromptResult & InferSteps<Steps>
 
   if (!targetDir) {
     const _result = await unwrapPrompt(
@@ -54,14 +62,10 @@ export async function setupPrompts<T = string>(
     }
   }
 
-  result.features = await unwrapPrompt(
-    multiselect({
-      message: `请选择要包含的功能： ${pico.dim('(↑/↓ 切换，空格选择，a 全选，回车确认)')}`,
-      // @ts-expect-error @clack/prompt's type doesn't support readonly array yet
-      options: featureOptions,
-      required: false,
-    }),
-  )
+  for (const step of steps) {
+    const extra = await step(result)
+    Object.assign(result, extra)
+  }
 
   return {
     result,
