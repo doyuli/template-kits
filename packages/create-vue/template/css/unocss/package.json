@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@unocss/reset": "^66.5.1"
+  },
+  "devDependencies": {
+    "unocss": "^66.5.1"
+  }
+}

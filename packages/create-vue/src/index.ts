@@ -13,12 +13,15 @@ import {
   preOrderDirectoryTraverse,
   renderFile,
   renderTemplate,
+  setupFeatures,
   setupProject,
   setupPrompts,
+  setupSelect,
 } from '@doyuli/kits-core'
 import ejs from 'ejs'
 import pico from 'picocolors'
 import {
+  CSS_FRAMEWORK_OPTIONS,
   DEFAULT_BANNER,
   FEATURE_OPTIONS,
 } from './constants'
@@ -32,7 +35,17 @@ import {
 
   intro(pico.magenta(DEFAULT_BANNER))
 
-  const { result, targetDir } = await setupPrompts(positionals[0], FEATURE_OPTIONS)
+  const inputTargetDir = positionals[0]
+
+  const { result, targetDir } = await setupPrompts(inputTargetDir, [
+    setupFeatures('features', {
+      options: [...FEATURE_OPTIONS],
+    }),
+    setupSelect('cssFramework', {
+      message: '请选择 CSS 框架：',
+      options: [...CSS_FRAMEWORK_OPTIONS],
+    }),
+  ])
 
   const root = await setupProject(cwd, result, targetDir)
 
@@ -56,8 +69,8 @@ function getOutroMessage(root: string, cwd: string) {
   return message
 }
 
-function renderTemplates(root: string, result: PromptResult) {
-  const { features = [] } = result
+function renderTemplates(root: string, result: PromptResult & { features: string[], cssFramework: string }) {
+  const { features, cssFramework } = result
 
   const needsAutoRouter = features.includes('unplugin-vue-router')
   const needsGitHooks = features.includes('simple-git-hooks')
@@ -78,6 +91,9 @@ function renderTemplates(root: string, result: PromptResult) {
   if (needsGitHooks) {
     render('git-hooks')
   }
+
+  // CSS framework
+  render(cssFramework === 'tailwindcss' ? 'css/tailwindcss' : 'css/unocss')
 
   const rootTsConfig = {
     files: [],

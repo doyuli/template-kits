@@ -14,3 +14,14 @@ export const FEATURE_OPTIONS = [
     label: 'Vitest（单元测试）',
   },
 ] as const
+
+export const CSS_FRAMEWORK_OPTIONS = [
+  {
+    value: 'unocss',
+    label: 'UnoCSS',
+  },
+  {
+    value: 'tailwindcss',
+    label: 'TailwindCSS',
+  },
+] as const
