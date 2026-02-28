@@ -4,17 +4,17 @@ packages:
 catalog:
   '@antfu/eslint-config': ^5.4.1
   '@clack/prompts': ^0.11.0
-  '@tsconfig/node22': ^22.0.5
+  '@tsconfig/node22': 22.0.5
   '@types/ejs': ^3.1.5
-  '@types/node': ^22.19.11
+  '@types/node': ^22.19.13
   ejs: 3.1.10
   eslint: ^9.39.3
-  eslint-plugin-format: ^1.4.0
+  eslint-plugin-format: ^1.5.0
   eslint-plugin-vue: ~10.3.0
   lint-staged: ^16.2.7
   picocolors: ^1.1.1
   prettier: 3.6.2
   semver: ^7.7.4
   simple-git-hooks: ^2.13.1
-  tsdown: ^0.15.12
+  tsdown: ^0.20.3
   typescript: ~5.8.3
