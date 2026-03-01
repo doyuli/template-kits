@@ -15,3 +15,13 @@ npx @doyuli/create-vue
 
 npm create @doyuli/vue
 ```
+
+### 创建 TypeScript Library 项目
+
+```bash
+npx @doyuli/create-lib
+
+# or
+
+npm create @doyuli/lib
+```

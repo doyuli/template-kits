@@ -1,0 +1,3 @@
+# @scope/foo
+
+@scope/foo

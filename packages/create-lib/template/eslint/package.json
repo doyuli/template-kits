@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "lint": "eslint --cache",
+    "lint:fix": "eslint --cache --fix"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-format": "catalog:"
+  }
+}
