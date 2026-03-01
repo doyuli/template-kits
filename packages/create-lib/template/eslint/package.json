@@ -4,8 +4,8 @@
     "lint:fix": "eslint --cache --fix"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-format": "catalog:"
+    "@antfu/eslint-config": "^7.6.1",
+    "eslint": "^10.0.2",
+    "eslint-plugin-format": "^2.0.1"
   }
 }

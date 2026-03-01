@@ -38,6 +38,6 @@
     "commit-msg": "node scripts/verify-commit.js"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "!(packages/**/template/**)": "eslint --fix"
   }
 }

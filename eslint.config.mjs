@@ -5,7 +5,7 @@ export default antfu(
     formatters: true,
     pnpm: true,
     ignores: [
-      '**/template',
+      '**/template/**',
       'examples/**',
     ],
     rules: {
