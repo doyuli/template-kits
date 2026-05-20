@@ -1,7 +1,7 @@
 {
   "name": "@doyuli/create-lib",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "@doyuli/create-lib",
   "license": "MIT",
   "repository": {
