@@ -24,7 +24,7 @@ export async function setupPrompts<
   targetDir: string,
   steps: [...Steps],
 ) {
-  const defaultProjectName = targetDir || 'Template-Kits'
+  const defaultProjectName = targetDir || 'create-starter'
 
   const result = {
     projectName: defaultProjectName,

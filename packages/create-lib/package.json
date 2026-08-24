@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/doyuli/template-kits.git",
+    "url": "git+https://github.com/doyuli-starters/create-starter.git",
     "directory": "packages/create-lib"
   },
   "keywords": [

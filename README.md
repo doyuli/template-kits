@@ -1,6 +1,6 @@
-# Template-Kits
+# create-starter
 
-Template-Kits - 快速生成你的模板代码
+create-starter - 快速生成你的模板代码
 
 ---
 

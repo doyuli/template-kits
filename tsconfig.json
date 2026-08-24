@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node22",
   "compilerOptions": {
     "baseUrl": "./",
+    "ignoreDeprecations": "6.0",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
