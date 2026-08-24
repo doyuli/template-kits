@@ -109,9 +109,11 @@ const main = createCliCommand({
       s.stop('Starter 下载失败')
       if (backupPath) {
         restoreBackup(backupPath, root)
-        console.log(pico.yellow(`已恢复原目录内容`))
+        console.log(pico.yellow('已恢复原目录内容，项目文件未受影响'))
       }
-      console.error(pico.red(`下载失败：${error instanceof Error ? error.message : String(error)}`))
+      const reason = error instanceof Error ? error.message : String(error)
+      console.error(pico.red('Starter 下载失败，请检查网络连接后重试。'))
+      console.error(pico.dim(`原因：${reason}`))
       process.exit(1)
     }
 
