@@ -1,7 +1,7 @@
 {
   "name": "create-starter",
   "type": "module",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "packageManager": "pnpm@10.25.0",
   "engines": {
