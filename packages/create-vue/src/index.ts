@@ -5,15 +5,16 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { parseArgs } from 'node:util'
 import { log } from '@clack/prompts'
 import {
+  createCliCommand,
   getCommand,
   getPackageManager,
+  parseCsvFlags,
   preOrderDirectoryTraverse,
-  renderBanner,
   renderFile,
   renderTemplate,
+  runMain,
   setupFeatures,
   setupProject,
   setupPrompts,
@@ -27,33 +28,67 @@ import {
   FEATURE_OPTIONS,
 } from './constants'
 
-(async function () {
-  const cwd = process.cwd()
-  const { positionals } = parseArgs({
-    strict: true,
-    allowPositionals: true,
-  })
+const FEATURE_VALUES = FEATURE_OPTIONS.map(o => o.value) as readonly string[]
+const CSS_VALUES = CSS_FRAMEWORK_OPTIONS.map(o => o.value) as readonly string[]
+const DEFAULT_CSS = 'unocss' as const
 
-  log.message(renderBanner({ name: 'create-vue', version }))
+const main = createCliCommand({
+  name: 'create-vue',
+  version,
+  description: '快速生成 Vue 3 项目模板',
+  args: {
+    dir: {
+      type: 'positional',
+      required: false,
+      description: '项目目录',
+    },
+    features: {
+      type: 'string',
+      description: `要包含的功能（可选：${FEATURE_VALUES.join(', ')}）`,
+    },
+    css: {
+      type: 'enum',
+      options: [...CSS_VALUES],
+      description: `CSS 框架（可选：${CSS_VALUES.join(' / ')}）`,
+    },
+  },
+  run: async ({ args }) => {
+    const inputTargetDir = args.dir
+    const useDefaults = args.default === true
 
-  const inputTargetDir = positionals[0]
+    let featuresFromCli: string[] | undefined
+    if (useDefaults) {
+      featuresFromCli = []
+    }
+    else if (typeof args.features === 'string') {
+      featuresFromCli = parseCsvFlags(args.features, FEATURE_VALUES, 'features')
+    }
 
-  const { result, targetDir } = await setupPrompts(inputTargetDir, [
-    setupFeatures('features', {
-      options: [...FEATURE_OPTIONS],
-    }),
-    setupSelect('cssFramework', {
-      message: '请选择 CSS 框架：',
-      options: [...CSS_FRAMEWORK_OPTIONS],
-    }),
-  ])
+    const cssFromCli = useDefaults
+      ? DEFAULT_CSS
+      : (typeof args.css === 'string' ? args.css : undefined)
 
-  const root = await setupProject(cwd, result, targetDir)
+    const { result, targetDir } = await setupPrompts(inputTargetDir, [
+      setupFeatures('features', {
+        options: [...FEATURE_OPTIONS],
+        fromCli: featuresFromCli as (typeof FEATURE_OPTIONS[number]['value'])[] | undefined,
+      }),
+      setupSelect('cssFramework', {
+        message: '请选择 CSS 框架：',
+        options: [...CSS_FRAMEWORK_OPTIONS],
+        fromCli: cssFromCli as (typeof CSS_FRAMEWORK_OPTIONS[number]['value']) | undefined,
+      }),
+    ], { force: args.force === true })
 
-  renderTemplates(root, result)
+    const { root } = await setupProject(process.cwd(), result, targetDir)
 
-  log.message(getOutroMessage(root, cwd))
-})()
+    renderTemplates(root, result)
+
+    log.message(getOutroMessage(root, process.cwd()))
+  },
+})
+
+runMain(main)
 
 function getOutroMessage(root: string, cwd: string) {
   const manager = getPackageManager()
@@ -93,7 +128,6 @@ function renderTemplates(root: string, result: PromptResult & { features: string
     render('git-hooks')
   }
 
-  // CSS framework
   render(cssFramework === 'tailwindcss' ? 'css/tailwindcss' : 'css/unocss')
 
   const rootTsConfig = {
@@ -116,7 +150,6 @@ function renderTemplates(root: string, result: PromptResult & { features: string
   renderFile(root, 'tsconfig.json', `${JSON.stringify(rootTsConfig, null, 2)}\n`)
   renderFile(root, '.env', `VITE_APP_TITLE = ${result.packageName}\n`)
 
-  //  EJS template rendering
   preOrderDirectoryTraverse(
     root,
     () => {},

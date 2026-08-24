@@ -1,6 +1,15 @@
 export const isObject = (val: unknown) => typeof val === 'object' && val !== null
 export const mergeArrayWithDedupe = (a: any[], b: any[]) => [...new Set([...a, ...b])]
 
+export function toValidPackageName(projectName: string) {
+  return projectName.trim().toLowerCase().replace(/\s+/g, '-').replace(/^[._]/, '').replace(/[^a-z0-9-~]+/g, '-')
+}
+
+export function toSafePackageName(projectName: string): string {
+  const valid = toValidPackageName(projectName)
+  return (valid && !/^-+$/.test(valid)) ? valid : 'my-app'
+}
+
 export function deepMerge(target: object, source: object) {
   for (const key of Object.keys(source)) {
     const oldVal = target[key]

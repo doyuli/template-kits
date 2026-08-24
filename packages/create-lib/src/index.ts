@@ -4,13 +4,14 @@ import type {
 import * as path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { parseArgs } from 'node:util'
 import { log } from '@clack/prompts'
 import {
+  createCliCommand,
   getCommand,
   getPackageManager,
-  renderBanner,
+  parseCsvFlags,
   renderTemplate,
+  runMain,
   setupFeatures,
   setupProject,
   setupPrompts,
@@ -20,31 +21,53 @@ import { version } from '../package.json'
 import {
   FEATURE_OPTIONS,
 } from './constants'
-import { renderMonorepoDeps } from './helper';
+import { renderMonorepoDeps } from './helper'
 
-(async function () {
-  const cwd = process.cwd()
-  const { positionals } = parseArgs({
-    strict: true,
-    allowPositionals: true,
-  })
+const FEATURE_VALUES = FEATURE_OPTIONS.map(o => o.value) as readonly string[]
 
-  log.message(renderBanner({ name: 'create-lib', version }))
+const main = createCliCommand({
+  name: 'create-lib',
+  version,
+  description: '快速生成 TypeScript Library 项目模板',
+  args: {
+    dir: {
+      type: 'positional',
+      required: false,
+      description: '项目目录',
+    },
+    features: {
+      type: 'string',
+      description: `要包含的功能（可选：${FEATURE_VALUES.join(', ')}）`,
+    },
+  },
+  run: async ({ args }) => {
+    const inputTargetDir = args.dir
+    const useDefaults = args.default === true
 
-  const inputTargetDir = positionals[0]
+    let featuresFromCli: string[] | undefined
+    if (useDefaults) {
+      featuresFromCli = []
+    }
+    else if (typeof args.features === 'string') {
+      featuresFromCli = parseCsvFlags(args.features, FEATURE_VALUES, 'features')
+    }
 
-  const { result, targetDir } = await setupPrompts(inputTargetDir, [
-    setupFeatures('features', {
-      options: [...FEATURE_OPTIONS],
-    }),
-  ])
+    const { result, targetDir } = await setupPrompts(inputTargetDir, [
+      setupFeatures('features', {
+        options: [...FEATURE_OPTIONS],
+        fromCli: featuresFromCli as (typeof FEATURE_OPTIONS[number]['value'])[] | undefined,
+      }),
+    ], { force: args.force === true })
 
-  const root = await setupProject(cwd, result, targetDir)
+    const { root } = await setupProject(process.cwd(), result, targetDir)
 
-  renderTemplates(root, result)
+    renderTemplates(root, result)
 
-  log.message(getOutroMessage(root, cwd))
-})()
+    log.message(getOutroMessage(root, process.cwd()))
+  },
+})
+
+runMain(main)
 
 function getOutroMessage(root: string, cwd: string) {
   const manager = getPackageManager()

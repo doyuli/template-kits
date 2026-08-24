@@ -18,12 +18,10 @@ export function renderTemplate(src: string, dest: string) {
   const stats = fs.statSync(src)
 
   if (stats.isDirectory()) {
-    // skip node_module
     if (path.basename(src) === 'node_modules') {
       return
     }
 
-    // if it's a directory, render its subdirectories and files recursively
     fs.mkdirSync(dest, { recursive: true })
     for (const file of fs.readdirSync(src)) {
       renderTemplate(path.resolve(src, file), path.resolve(dest, file))
@@ -34,7 +32,6 @@ export function renderTemplate(src: string, dest: string) {
   const filename = path.basename(src)
 
   if (filename === 'package.json' && fs.existsSync(dest)) {
-    // merge instead of overwriting
     const existing = JSON.parse(fs.readFileSync(dest, 'utf8'))
     const newPackage = JSON.parse(fs.readFileSync(src, 'utf8'))
     const pkg = sortDependencies(deepMerge(existing, newPackage))
@@ -43,7 +40,6 @@ export function renderTemplate(src: string, dest: string) {
   }
 
   if (filename === 'extensions.json' && fs.existsSync(dest)) {
-    // merge instead of overwriting
     const existing = JSON.parse(fs.readFileSync(dest, 'utf8'))
     const newExtensions = JSON.parse(fs.readFileSync(src, 'utf8'))
     const extensions = deepMerge(existing, newExtensions)
@@ -52,7 +48,6 @@ export function renderTemplate(src: string, dest: string) {
   }
 
   if (filename === 'settings.json' && fs.existsSync(dest)) {
-    // merge instead of overwriting
     const existing = JSON.parse(fs.readFileSync(dest, 'utf8'))
     const newSettings = JSON.parse(fs.readFileSync(src, 'utf8'))
     const settings = deepMerge(existing, newSettings)
@@ -61,12 +56,10 @@ export function renderTemplate(src: string, dest: string) {
   }
 
   if (filename.startsWith('_')) {
-    // rename `_file` to `.file`
     dest = path.resolve(path.dirname(dest), filename.replace(/^_/, '.'))
   }
 
   if (filename === '_gitignore' && fs.existsSync(dest)) {
-    // append to existing .gitignore
     const existing = fs.readFileSync(dest, 'utf8')
     const newGitignore = fs.readFileSync(src, 'utf8')
     fs.writeFileSync(dest, `${existing}\n${newGitignore}`)

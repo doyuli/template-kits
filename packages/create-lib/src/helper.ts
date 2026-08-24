@@ -10,14 +10,12 @@ export function renderMonorepoDeps(root: string) {
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'))
   const devDeps: Record<string, string> = pkg.devDependencies ?? {}
 
-  // Extract real versions for catalog, then replace with catalog: references
   const sortedEntries = Object.entries(devDeps).sort(([a], [b]) => a.localeCompare(b))
   const catalogDeps = Object.fromEntries(sortedEntries.map(([k]) => [k, 'catalog:']))
 
   pkg.devDependencies = catalogDeps
   renderFile(root, 'package.json', `${JSON.stringify(pkg, null, 2)}\n`)
 
-  // Generate pnpm-workspace.yaml
   const catalogLines = sortedEntries
     .map(([name, version]) => {
       const key = name.includes('/') ? `'${name}'` : name
