@@ -2,8 +2,8 @@ export const DEFAULT_BANNER = 'create-starter - 快速生成你的模板代码'
 
 export const FEATURE_OPTIONS = [
   {
-    value: 'unplugin-vue-router',
-    label: 'Unplugin Vue Router（约定式路由）',
+    value: 'file-routing',
+    label: '约定式路由（vue-router v5）',
   },
   {
     value: 'simple-git-hooks',

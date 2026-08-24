@@ -7,9 +7,9 @@ import UnoCSS from 'unocss/vite'
 import tailwindcss from '@tailwindcss/vite'
 <%_ } -%>
 import AutoImport from 'unplugin-auto-import/vite'
-<%_ if (features.includes('unplugin-vue-router')) { -%>
-import { VueRouterAutoImports } from 'unplugin-vue-router'
-import VueRouter from 'unplugin-vue-router/vite'
+<%_ if (features.includes('file-routing')) { -%>
+import { VueRouterAutoImports } from 'vue-router/unplugin'
+import VueRouter from 'vue-router/vite'
 <%_ } -%>
 import { defineConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -17,9 +17,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    <%_ if (features.includes('unplugin-vue-router')) { -%>
+    <%_ if (features.includes('file-routing')) { -%>
     VueRouter({
-      dts: 'types/typed-router.d.ts',
+      dts: 'src/route-map.d.ts',
     }),
     // ⚠️ Vue must be placed after VueRouter()
     <%_ } -%>
@@ -27,7 +27,7 @@ export default defineConfig({
     AutoImport({
       imports: [
         'vue',
-        <%_ if (features.includes('unplugin-vue-router')) { -%>
+        <%_ if (features.includes('file-routing')) { -%>
         VueRouterAutoImports,
         <%_ } else { -%>
         'vue-router',

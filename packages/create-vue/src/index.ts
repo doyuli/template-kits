@@ -72,7 +72,7 @@ function getOutroMessage(root: string, cwd: string) {
 function renderTemplates(root: string, result: PromptResult & { features: string[], cssFramework: string }) {
   const { features, cssFramework } = result
 
-  const needsAutoRouter = features.includes('unplugin-vue-router')
+  const needsAutoRouter = features.includes('file-routing')
   const needsGitHooks = features.includes('simple-git-hooks')
   const needsVitest = features.includes('vitest')
 
@@ -86,7 +86,7 @@ function renderTemplates(root: string, result: PromptResult & { features: string
   render('eslint')
   render('tsconfig')
 
-  render(needsAutoRouter ? 'router/unplugin' : 'router/default')
+  render(needsAutoRouter ? 'router/file-routing' : 'router/default')
 
   if (needsGitHooks) {
     render('git-hooks')

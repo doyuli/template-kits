@@ -12,7 +12,7 @@
   "include": [
     "types/env.d.ts",
     "types/auto-imports.d.ts",
-    "types/typed-router.d.ts",
+    "src/route-map.d.ts",
     "src/**/*",
     "src/**/*.vue"
   ],
