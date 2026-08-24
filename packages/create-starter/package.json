@@ -1,0 +1,42 @@
+{
+  "name": "@doyuli/create-starter",
+  "type": "module",
+  "version": "0.2.4",
+  "description": "@doyuli/create-starter",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doyuli-starters/create-starter.git",
+    "directory": "packages/create-starter"
+  },
+  "keywords": [
+    "templates",
+    "create-starter"
+  ],
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "bin": {
+    "create-starter": "bin/index.js"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "catalog:",
+    "@doyuli/kits-core": "workspace:^",
+    "giget": "catalog:",
+    "picocolors": "catalog:"
+  }
+}

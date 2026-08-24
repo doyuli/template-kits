@@ -9,6 +9,14 @@
       "@doyuli/*": ["packages/*/src"]
     },
     "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
     "strict": false
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "packages/*/dist",
+    "packages/*/template"
+  ]
 }
