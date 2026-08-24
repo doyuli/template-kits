@@ -6,11 +6,12 @@ import * as path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
-import { intro, outro } from '@clack/prompts'
+import { log } from '@clack/prompts'
 import {
   getCommand,
   getPackageManager,
   preOrderDirectoryTraverse,
+  renderBanner,
   renderFile,
   renderTemplate,
   setupFeatures,
@@ -20,9 +21,9 @@ import {
 } from '@doyuli/kits-core'
 import ejs from 'ejs'
 import pico from 'picocolors'
+import { version } from '../package.json'
 import {
   CSS_FRAMEWORK_OPTIONS,
-  DEFAULT_BANNER,
   FEATURE_OPTIONS,
 } from './constants'
 
@@ -33,7 +34,7 @@ import {
     allowPositionals: true,
   })
 
-  intro(pico.magenta(DEFAULT_BANNER))
+  log.message(renderBanner({ name: 'create-vue', version }))
 
   const inputTargetDir = positionals[0]
 
@@ -51,7 +52,7 @@ import {
 
   renderTemplates(root, result)
 
-  outro(getOutroMessage(root, cwd))
+  log.message(getOutroMessage(root, cwd))
 })()
 
 function getOutroMessage(root: string, cwd: string) {

@@ -1,5 +1,3 @@
-export const DEFAULT_BANNER = 'create-starter - 快速生成你的模板代码'
-
 export const REMOTE_STARTERS_URL = 'https://raw.githubusercontent.com/doyuli-starters/assets/main/starters.json'
 
 export const REMOTE_TIMEOUT_MS = 5000

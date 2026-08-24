@@ -1,5 +1,3 @@
-export const DEFAULT_BANNER = 'create-starter - 快速生成你的模板代码'
-
 export const FEATURE_OPTIONS = [
   {
     value: 'monorepo',

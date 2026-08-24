@@ -3,11 +3,12 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { intro, outro, spinner, text } from '@clack/prompts'
+import { log, spinner, text } from '@clack/prompts'
 import {
   getCommand,
   getPackageManager,
   preOrderDirectoryTraverse,
+  renderBanner,
   setupProject,
   setupPrompts,
   setupSelect,
@@ -16,7 +17,6 @@ import {
 import { downloadTemplate } from 'giget'
 import pico from 'picocolors'
 import { version } from '../package.json'
-import { DEFAULT_BANNER } from './constants'
 import { resolveStarters } from './starters'
 
 (async function () {
@@ -26,7 +26,7 @@ import { resolveStarters } from './starters'
     allowPositionals: true,
   })
 
-  intro(pico.magenta(`${DEFAULT_BANNER} v${version}`))
+  log.message(renderBanner({ name: 'create-starter', version }))
 
   const inputTargetDir = positionals[0]
 
@@ -70,7 +70,7 @@ import { resolveStarters } from './starters'
 
   replacePlaceholders(root, { ...result, description })
 
-  outro(getOutroMessage(root, cwd))
+  log.message(getOutroMessage(root, cwd))
 })()
 
 // pkg-placeholder → 项目名，_description_ → 项目描述；仅改文件内容，跳过二进制

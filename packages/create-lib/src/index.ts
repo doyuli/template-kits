@@ -5,18 +5,19 @@ import * as path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
-import { intro, outro } from '@clack/prompts'
+import { log } from '@clack/prompts'
 import {
   getCommand,
   getPackageManager,
+  renderBanner,
   renderTemplate,
   setupFeatures,
   setupProject,
   setupPrompts,
 } from '@doyuli/kits-core'
 import pico from 'picocolors'
+import { version } from '../package.json'
 import {
-  DEFAULT_BANNER,
   FEATURE_OPTIONS,
 } from './constants'
 import { renderMonorepoDeps } from './helper';
@@ -28,7 +29,7 @@ import { renderMonorepoDeps } from './helper';
     allowPositionals: true,
   })
 
-  intro(pico.magenta(DEFAULT_BANNER))
+  log.message(renderBanner({ name: 'create-lib', version }))
 
   const inputTargetDir = positionals[0]
 
@@ -42,7 +43,7 @@ import { renderMonorepoDeps } from './helper';
 
   renderTemplates(root, result)
 
-  outro(getOutroMessage(root, cwd))
+  log.message(getOutroMessage(root, cwd))
 })()
 
 function getOutroMessage(root: string, cwd: string) {
