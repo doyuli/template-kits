@@ -11,8 +11,8 @@
     "build": "tsdown",
     "test": "vitest",
     "release": "bumpp -r",
-    "lint": "eslint --cache",
-    "lint:fix": "eslint --cache --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm run build"
   },

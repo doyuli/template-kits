@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "lint": "eslint --cache",
-    "lint:fix": "eslint --cache --fix"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.3.0",
