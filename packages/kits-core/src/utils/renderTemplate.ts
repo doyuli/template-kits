@@ -4,8 +4,6 @@ import * as path from 'node:path'
 import { deepMerge, sortDependencies } from './util'
 
 /**
- * @see https://github.com/vuejs/create-vue/blob/main/utils/renderTemplate.ts
- *
  * Renders a template folder/file to the file system,
  * by recursively copying all files under the `src` directory,
  * with the following exception:

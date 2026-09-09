@@ -128,7 +128,6 @@ const main = createCliCommand({
 
 runMain(main)
 
-// pkg-placeholder → 项目名，_description_ → 项目描述；仅改文件内容，跳过二进制
 function replacePlaceholders(root: string, result: PromptResult & { description: string }) {
   const packageName = result.packageName ?? ''
   const description = result.description
@@ -158,8 +157,8 @@ function replacePlaceholders(root: string, result: PromptResult & { description:
 
       const content = buffer.toString('utf8')
       const replaced = content
-        .replaceAll('pkg-placeholder', packageName)
-        .replaceAll('_description_', description)
+        .replaceAll('__name__', packageName)
+        .replaceAll('__description__', description)
 
       if (replaced !== content)
         fs.writeFileSync(filepath, replaced)
